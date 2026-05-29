@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.solem.ginko.prueba_tecnica.dtos.ProveedorRequest;
 import com.solem.ginko.prueba_tecnica.dtos.ProveedorResponse;
 import com.solem.ginko.prueba_tecnica.exceptions.NotFoundException;
 import com.solem.ginko.prueba_tecnica.mappers.ProveedorMapper;
@@ -38,5 +39,12 @@ public class ProveedorServiceImpl implements ProveedorService {
         return proveedorRepository.findByEstado(estado).stream()
                 .map(proveedorMapper::toResponse)
                 .toList();
+    }
+
+    @Override
+    @Transactional
+    public ProveedorResponse createProveedor(ProveedorRequest proveedorRequest) {
+        Proveedor saved = proveedorRepository.save(proveedorMapper.toEntity(proveedorRequest));
+        return proveedorMapper.toResponse(saved);
     }
 }
