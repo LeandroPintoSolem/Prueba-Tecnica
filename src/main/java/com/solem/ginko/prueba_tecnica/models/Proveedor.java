@@ -31,7 +31,7 @@ public class Proveedor {
     @Column(nullable = false)
     String razonSocial;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, updatable = false)
     Long idTributario;
 
     @Column(nullable = false)

@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.solem.ginko.prueba_tecnica.dtos.ProveedorRequest;
 import com.solem.ginko.prueba_tecnica.dtos.ProveedorResponse;
+import com.solem.ginko.prueba_tecnica.dtos.UpdateProveedorRequest;
 import com.solem.ginko.prueba_tecnica.exceptions.NotFoundException;
 import com.solem.ginko.prueba_tecnica.mappers.ProveedorMapper;
 import com.solem.ginko.prueba_tecnica.models.EstadoProveedor;
@@ -46,5 +47,16 @@ public class ProveedorServiceImpl implements ProveedorService {
     public ProveedorResponse createProveedor(ProveedorRequest proveedorRequest) {
         Proveedor saved = proveedorRepository.save(proveedorMapper.toEntity(proveedorRequest));
         return proveedorMapper.toResponse(saved);
+    }
+
+    @Override
+    @Transactional
+    public ProveedorResponse updateProveedor(UpdateProveedorRequest proveedorRequest, UUID id) {
+        Proveedor proveedor = proveedorRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Proveedor no encontrado: " + id));
+
+        proveedorMapper.updateEntity(proveedor, proveedorRequest);
+
+        return proveedorMapper.toResponse(proveedor);
     }
 }
