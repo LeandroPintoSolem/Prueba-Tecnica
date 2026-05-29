@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 import com.solem.ginko.prueba_tecnica.dtos.ProveedorRequest;
 import com.solem.ginko.prueba_tecnica.dtos.ProveedorResponse;
+import com.solem.ginko.prueba_tecnica.dtos.UpdateEstadoProveedorRequest;
 import com.solem.ginko.prueba_tecnica.dtos.UpdateProveedorRequest;
 import com.solem.ginko.prueba_tecnica.models.Proveedor;
 
@@ -32,5 +33,9 @@ public class ProveedorMapper {
     public void updateEntity(Proveedor proveedor, UpdateProveedorRequest request) {
         proveedor.setRazonSocial(request.getRazonSocial());
         proveedor.setEmail(request.getEmail());
+    }
+
+    public void updateEstado(Proveedor proveedor, UpdateEstadoProveedorRequest request) {
+        proveedor.setEstado(request.estado());
     }
 }

@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.solem.ginko.prueba_tecnica.dtos.ProveedorRequest;
 import com.solem.ginko.prueba_tecnica.dtos.ProveedorResponse;
+import com.solem.ginko.prueba_tecnica.dtos.UpdateEstadoProveedorRequest;
 import com.solem.ginko.prueba_tecnica.dtos.UpdateProveedorRequest;
 import com.solem.ginko.prueba_tecnica.models.EstadoProveedor;
 import com.solem.ginko.prueba_tecnica.services.ProveedorService;
@@ -57,10 +59,20 @@ public class ProveedorController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ProveedorResponse> updateProveedor(
-            @PathVariable UUID id,
-            @Valid @RequestBody UpdateProveedorRequest newProveedor
+        @PathVariable UUID id,
+        @Valid @RequestBody UpdateProveedorRequest newProveedor
     ) {
-        ProveedorResponse proveedor = proveedorService.updateProveedor(newProveedor, id);
+        ProveedorResponse proveedor = proveedorService.updateProveedor(id, newProveedor);
+
+        return ResponseEntity.ok(proveedor);
+    }
+
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<ProveedorResponse> updateEstadoProveedor(
+        @PathVariable UUID id,
+        @Valid @RequestBody UpdateEstadoProveedorRequest request
+    ) {
+        ProveedorResponse proveedor = proveedorService.updateEstadoProveedor(id, request);
 
         return ResponseEntity.ok(proveedor);
     }
