@@ -11,9 +11,11 @@ import com.solem.ginko.prueba_tecnica.dtos.ListOrdenesPagoRequest;
 import com.solem.ginko.prueba_tecnica.dtos.OrdenPagoRequest;
 import com.solem.ginko.prueba_tecnica.dtos.OrdenPagoResponse;
 import com.solem.ginko.prueba_tecnica.dtos.PageResponse;
+import com.solem.ginko.prueba_tecnica.dtos.UpdateEstadoOrdenPagoRequest;
 import com.solem.ginko.prueba_tecnica.exceptions.BusinessException;
 import com.solem.ginko.prueba_tecnica.exceptions.NotFoundException;
 import com.solem.ginko.prueba_tecnica.mappers.OrdenPagoMapper;
+import com.solem.ginko.prueba_tecnica.models.EstadoOrdenPago;
 import com.solem.ginko.prueba_tecnica.models.EstadoProveedor;
 import com.solem.ginko.prueba_tecnica.models.OrdenPago;
 import com.solem.ginko.prueba_tecnica.models.Proveedor;
@@ -50,5 +52,34 @@ public class OrdenPagoServiceImpl implements OrdenPagoService {
         Page<OrdenPago> page = ordenPagoRepository.findByFilters(request.estado(), request.idProveedor(), pageable);
 
         return PageResponse.from(page.map(ordenPagoMapper::toResponse));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public OrdenPagoResponse getOrdenPago(UUID id) {
+        OrdenPago orden = ordenPagoRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Orden de pago no encontrada: " + id));
+
+        return ordenPagoMapper.toResponse(orden);
+    }
+
+    @Override
+    @Transactional
+    public OrdenPagoResponse updateEstadoOrdenPago(UUID id, UpdateEstadoOrdenPagoRequest request) {
+        OrdenPago orden = ordenPagoRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Orden de pago no encontrada: " + id));
+
+        EstadoOrdenPago estadoActual = orden.getEstado();
+        EstadoOrdenPago estadoNuevo = request.estado();
+
+        if (!estadoActual.puedeTransicionarA(estadoNuevo)) {
+            throw new BusinessException(
+                String.format("Transición de estado inválida: no se puede pasar de %s a %s", estadoActual, estadoNuevo)
+            );
+        }
+
+        ordenPagoMapper.updateEstado(orden, request);
+
+        return ordenPagoMapper.toResponse(orden);
     }
 }

@@ -8,6 +8,7 @@ import com.solem.ginko.prueba_tecnica.dtos.ListOrdenesPagoRequest;
 import com.solem.ginko.prueba_tecnica.dtos.OrdenPagoRequest;
 import com.solem.ginko.prueba_tecnica.dtos.OrdenPagoResponse;
 import com.solem.ginko.prueba_tecnica.dtos.PageResponse;
+import com.solem.ginko.prueba_tecnica.dtos.UpdateEstadoOrdenPagoRequest;
 import com.solem.ginko.prueba_tecnica.models.EstadoOrdenPago;
 import com.solem.ginko.prueba_tecnica.services.OrdenPagoService;
 
@@ -21,6 +22,8 @@ import java.util.UUID;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,6 +60,12 @@ public class OrdenPagoController {
         return ResponseEntity.created(location).body(created);
     }
     
+    @GetMapping("/{id}")
+    public ResponseEntity<OrdenPagoResponse> getOrdenPago(@PathVariable UUID id) {
+        log.info("[getOrdenPago] IN - id: {}", id);
+        return ResponseEntity.ok(ordenPagoService.getOrdenPago(id));
+    }
+
     @GetMapping
     public ResponseEntity<PageResponse<OrdenPagoResponse>> listOrdenesPago(
         @RequestParam(required = false) EstadoOrdenPago estado,
@@ -73,5 +82,14 @@ public class OrdenPagoController {
 
         return ResponseEntity.ok(ordenPagoService.listOrdenesPago(request, pageable));
     }
-    
+
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<OrdenPagoResponse> updateEstadoOrdenPago(
+        @PathVariable UUID id,
+        @Valid @RequestBody UpdateEstadoOrdenPagoRequest request
+    ) {
+        log.info("[updateEstadoOrdenPago] IN - id: {} - estado: {}", id, request.estado());
+        return ResponseEntity.ok(ordenPagoService.updateEstadoOrdenPago(id, request));
+    }
+
 }

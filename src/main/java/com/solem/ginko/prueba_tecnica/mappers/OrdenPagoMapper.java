@@ -4,13 +4,14 @@ import org.springframework.stereotype.Component;
 
 import com.solem.ginko.prueba_tecnica.dtos.OrdenPagoRequest;
 import com.solem.ginko.prueba_tecnica.dtos.OrdenPagoResponse;
+import com.solem.ginko.prueba_tecnica.dtos.UpdateEstadoOrdenPagoRequest;
 import com.solem.ginko.prueba_tecnica.models.EstadoOrdenPago;
 import com.solem.ginko.prueba_tecnica.models.OrdenPago;
 import com.solem.ginko.prueba_tecnica.models.Proveedor;
 
 @Component
 public class OrdenPagoMapper {
-    
+
     public OrdenPagoResponse toResponse(OrdenPago orden) {
 
         return new OrdenPagoResponse(
@@ -30,5 +31,9 @@ public class OrdenPagoMapper {
             .concepto(orden.concepto())
             .estado(EstadoOrdenPago.BORRADOR)
             .build();
+    }
+
+    public void updateEstado(OrdenPago orden, UpdateEstadoOrdenPagoRequest request) {
+        orden.setEstado(request.estado());
     }
 }
