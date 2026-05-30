@@ -1,11 +1,13 @@
 package com.solem.ginko.prueba_tecnica.services.impl;
 
-import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.solem.ginko.prueba_tecnica.dtos.PageResponse;
 import com.solem.ginko.prueba_tecnica.dtos.ProveedorRequest;
 import com.solem.ginko.prueba_tecnica.dtos.ProveedorResponse;
 import com.solem.ginko.prueba_tecnica.dtos.UpdateEstadoProveedorRequest;
@@ -37,10 +39,12 @@ public class ProveedorServiceImpl implements ProveedorService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ProveedorResponse> getProveedoresByEstado(EstadoProveedor estado) {
-        return proveedorRepository.findByEstado(estado).stream()
-                .map(proveedorMapper::toResponse)
-                .toList();
+    public PageResponse<ProveedorResponse> listarProveedores(EstadoProveedor estado, Pageable pageable) {
+        Page<Proveedor> page = (estado == null)
+                ? proveedorRepository.findAll(pageable)
+                : proveedorRepository.findByEstado(estado, pageable);
+
+        return PageResponse.from(page.map(proveedorMapper::toResponse));
     }
 
     @Override
