@@ -56,4 +56,14 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
+        var response = new ErrorResponse(
+            HttpStatus.UNPROCESSABLE_CONTENT.value(),
+            e.getMessage()
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.UNPROCESSABLE_CONTENT);
+    }
 }
