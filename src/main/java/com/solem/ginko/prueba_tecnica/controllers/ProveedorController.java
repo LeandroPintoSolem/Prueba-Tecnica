@@ -56,7 +56,7 @@ public class ProveedorController {
         int safeSize = Math.clamp(size, 1, MAX_PAGE_SIZE);
         Pageable pageable = PageRequest.of(safePage, safeSize);
 
-        return ResponseEntity.ok(proveedorService.listarProveedores(estado, pageable));
+        return ResponseEntity.ok(proveedorService.listProveedores(estado, pageable));
     }
 
     @PostMapping

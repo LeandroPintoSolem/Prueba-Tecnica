@@ -13,7 +13,7 @@ import com.solem.ginko.prueba_tecnica.models.EstadoProveedor;
 
 public interface ProveedorService {
     ProveedorResponse getProveedor(UUID id);
-    PageResponse<ProveedorResponse> listarProveedores(EstadoProveedor estado, Pageable pageable);
+    PageResponse<ProveedorResponse> listProveedores(EstadoProveedor estado, Pageable pageable);
     ProveedorResponse createProveedor(ProveedorRequest proveedorRequest);
     ProveedorResponse updateProveedor(UUID id, UpdateProveedorRequest proveedorRequest);
     ProveedorResponse updateEstadoProveedor(UUID id, UpdateEstadoProveedorRequest request);

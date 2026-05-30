@@ -39,7 +39,7 @@ public class ProveedorServiceImpl implements ProveedorService {
 
     @Override
     @Transactional(readOnly = true)
-    public PageResponse<ProveedorResponse> listarProveedores(EstadoProveedor estado, Pageable pageable) {
+    public PageResponse<ProveedorResponse> listProveedores(EstadoProveedor estado, Pageable pageable) {
         Page<Proveedor> page = (estado == null)
                 ? proveedorRepository.findAll(pageable)
                 : proveedorRepository.findByEstado(estado, pageable);

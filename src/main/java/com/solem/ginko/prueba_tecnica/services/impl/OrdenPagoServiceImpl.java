@@ -2,11 +2,15 @@ package com.solem.ginko.prueba_tecnica.services.impl;
 
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.solem.ginko.prueba_tecnica.dtos.ListOrdenesPagoRequest;
 import com.solem.ginko.prueba_tecnica.dtos.OrdenPagoRequest;
 import com.solem.ginko.prueba_tecnica.dtos.OrdenPagoResponse;
+import com.solem.ginko.prueba_tecnica.dtos.PageResponse;
 import com.solem.ginko.prueba_tecnica.exceptions.BusinessException;
 import com.solem.ginko.prueba_tecnica.exceptions.NotFoundException;
 import com.solem.ginko.prueba_tecnica.mappers.OrdenPagoMapper;
@@ -38,5 +42,13 @@ public class OrdenPagoServiceImpl implements OrdenPagoService {
         OrdenPago created = ordenPagoRepository.save(ordenPagoMapper.toEntity(orden, proveedor));
 
         return ordenPagoMapper.toResponse(created);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PageResponse<OrdenPagoResponse> listOrdenesPago(ListOrdenesPagoRequest request, Pageable pageable) {
+        Page<OrdenPago> page = ordenPagoRepository.findByFilters(request.estado(), request.idProveedor(), pageable);
+
+        return PageResponse.from(page.map(ordenPagoMapper::toResponse));
     }
 }
