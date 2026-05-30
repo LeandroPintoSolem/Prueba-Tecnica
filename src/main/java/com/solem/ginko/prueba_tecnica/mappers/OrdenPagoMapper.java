@@ -1,5 +1,7 @@
 package com.solem.ginko.prueba_tecnica.mappers;
 
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Component;
 
 import com.solem.ginko.prueba_tecnica.dtos.OrdenPagoRequest;
@@ -30,6 +32,7 @@ public class OrdenPagoMapper {
             .monto(orden.monto())
             .concepto(orden.concepto())
             .estado(EstadoOrdenPago.BORRADOR)
+            .fechaCreacion(LocalDateTime.now())
             .build();
     }
 
