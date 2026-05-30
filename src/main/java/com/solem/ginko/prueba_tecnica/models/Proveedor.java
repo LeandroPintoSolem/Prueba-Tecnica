@@ -26,18 +26,18 @@ import lombok.Setter;
 public class Proveedor {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    UUID idProveedor;
+    private UUID idProveedor;
 
     @Column(nullable = false)
-    String razonSocial;
+    private String razonSocial;
 
     @Column(unique = true, nullable = false, updatable = false)
-    Long idTributario;
+    private Long idTributario;
 
     @Column(nullable = false)
-    String email;
+    private String email;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    EstadoProveedor estado;
+    private EstadoProveedor estado;
 }
