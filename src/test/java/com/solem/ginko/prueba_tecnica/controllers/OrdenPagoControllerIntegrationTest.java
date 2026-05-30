@@ -96,7 +96,7 @@ class OrdenPagoControllerIntegrationTest {
         mockMvc.perform(post("/api/v1/ordenes-pago")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body))
-            .andExpect(status().isUnprocessableEntity())
+            .andExpect(status().isUnprocessableContent())
             .andExpect(jsonPath("$.status").value(422));
     }
 
