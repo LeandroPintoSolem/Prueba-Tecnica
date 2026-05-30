@@ -15,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -50,4 +51,7 @@ public class OrdenPago {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private EstadoOrdenPago estado;
+
+    @Version
+    private Long version;
 }

@@ -70,7 +70,9 @@ En lugar de exponer `Page<T>` de Spring Data al cliente (que filtra detalles int
 ### `size` máximo de página: 50, default: 20
 El controller normaliza valores fuera de rango silenciosamente (página negativa → 0, size > 50 → 50). Este límite protege a la BD de queries con tamaños arbitrarios y evita 400s por valores que el cliente puede haber escrito por error.
 
+### Manejo de concurrencia con optimistic locking en `OrdenPago`
+Se agregó `@Version` a la entidad. Si dos requests intentan modificar simultáneamente la misma orden (ej: dos usuarios aprobándola), Hibernate detecta el conflicto en el UPDATE: solo uno gana y el otro recibe `409 Conflict` con mensaje descriptivo (manejado en `GlobalExceptionHandler` vía `ObjectOptimisticLockingFailureException`). Es la forma más liviana de manejar concurrencia: no bloquea filas en BD, solo detecta y reporta el conflicto. Aplica especialmente al PATCH de transición de estado, donde un mismo recurso puede ser tocado por múltiples actores.
+
 ## Pendientes
 
-- **Tests unitarios y de integración**: solo está el `contextLoads` autogenerado por Spring Initializr. No se alcanzó a escribir tests de service ni de controllers (MockMvc).
-- *(Completar con cualquier bloque adicional del enunciado que no se haya alcanzado a implementar y la razón.)*
+- **Idempotencia en creación de órdenes vía `Idempotency-Key`** (Bloque 4): no se implementó por tiempo. Una solución robusta requiere persistir las keys con sus respuestas, manejar TTL para evitar acumulación, y resolver carreras entre el chequeo de la key y el guardado del resultado. Una implementación apurada sería peor que no incluirla, por lo que se priorizó dejar fuera esta funcionalidad antes que hacerla a medias.

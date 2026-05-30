@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -52,6 +53,16 @@ public class GlobalExceptionHandler {
         var response = new ErrorResponse(
             HttpStatus.CONFLICT.value(),
             "Conflicto de datos: posible duplicado en campos únicos"
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+    public ResponseEntity<ErrorResponse> handleOptimisticLock(ObjectOptimisticLockingFailureException e) {
+        var response = new ErrorResponse(
+            HttpStatus.CONFLICT.value(),
+            "El recurso fue modificado por otro proceso. Recargue los datos e intente nuevamente."
         );
 
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
