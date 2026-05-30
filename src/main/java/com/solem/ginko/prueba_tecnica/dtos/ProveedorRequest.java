@@ -6,25 +6,18 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
-@AllArgsConstructor
-public class ProveedorRequest {
+public record ProveedorRequest(
 
     @NotBlank
-    String razonSocial;
+    String razonSocial,
 
     @NotNull
-    Long idTributario;
+    Long idTributario,
 
     @NotBlank
     @Email
-    String email;
+    String email,
 
     @NotNull
-    EstadoProveedor estado;
-}
+    EstadoProveedor estado
+) {}

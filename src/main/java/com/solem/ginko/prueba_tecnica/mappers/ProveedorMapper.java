@@ -23,16 +23,16 @@ public class ProveedorMapper {
 
     public Proveedor toEntity(ProveedorRequest request) {
         return Proveedor.builder()
-                .razonSocial(request.getRazonSocial())
-                .idTributario(request.getIdTributario())
-                .email(request.getEmail())
-                .estado(request.getEstado())
+                .razonSocial(request.razonSocial())
+                .idTributario(request.idTributario())
+                .email(request.email())
+                .estado(request.estado())
                 .build();
     }
 
     public void updateEntity(Proveedor proveedor, UpdateProveedorRequest request) {
-        proveedor.setRazonSocial(request.getRazonSocial());
-        proveedor.setEmail(request.getEmail());
+        proveedor.setRazonSocial(request.razonSocial());
+        proveedor.setEmail(request.email());
     }
 
     public void updateEstado(Proveedor proveedor, UpdateEstadoProveedorRequest request) {
