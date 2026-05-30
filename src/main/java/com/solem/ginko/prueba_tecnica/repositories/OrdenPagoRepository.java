@@ -1,5 +1,7 @@
 package com.solem.ginko.prueba_tecnica.repositories;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -21,5 +23,18 @@ public interface OrdenPagoRepository extends JpaRepository<OrdenPago, UUID> {
         @Param("estado") EstadoOrdenPago estado,
         @Param("idProveedor") UUID idProveedor,
         Pageable pageable
+    );
+
+    @Query("""
+        SELECT COALESCE(SUM(o.monto), 0) FROM OrdenPago o
+        WHERE o.proveedor.idProveedor = :idProveedor
+            AND o.estado = com.solem.ginko.prueba_tecnica.models.EstadoOrdenPago.PAGADA
+            AND o.fechaCreacion >= :desde
+            AND o.fechaCreacion <= :hasta
+    """)
+    BigDecimal sumTotalPagadoByProveedorEnRango(
+        @Param("idProveedor") UUID idProveedor,
+        @Param("desde") LocalDateTime desde,
+        @Param("hasta") LocalDateTime hasta
     );
 }

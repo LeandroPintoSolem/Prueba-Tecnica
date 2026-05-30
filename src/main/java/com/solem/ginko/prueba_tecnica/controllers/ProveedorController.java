@@ -1,10 +1,12 @@
 package com.solem.ginko.prueba_tecnica.controllers;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.UUID;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -20,9 +22,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.solem.ginko.prueba_tecnica.dtos.PageResponse;
 import com.solem.ginko.prueba_tecnica.dtos.ProveedorRequest;
 import com.solem.ginko.prueba_tecnica.dtos.ProveedorResponse;
+import com.solem.ginko.prueba_tecnica.dtos.ReportePagosResponse;
 import com.solem.ginko.prueba_tecnica.dtos.UpdateEstadoProveedorRequest;
 import com.solem.ginko.prueba_tecnica.dtos.UpdateProveedorRequest;
 import com.solem.ginko.prueba_tecnica.models.EstadoProveedor;
+import com.solem.ginko.prueba_tecnica.services.OrdenPagoService;
 import com.solem.ginko.prueba_tecnica.services.ProveedorService;
 
 import jakarta.validation.Valid;
@@ -38,6 +42,7 @@ public class ProveedorController {
     private static final int MAX_PAGE_SIZE = 50;
 
     private final ProveedorService proveedorService;
+    private final OrdenPagoService ordenPagoService;
 
     @GetMapping("/{id}")
     public ResponseEntity<ProveedorResponse> getProveedor(@PathVariable UUID id) {
@@ -92,5 +97,15 @@ public class ProveedorController {
         ProveedorResponse proveedor = proveedorService.updateEstadoProveedor(id, request);
 
         return ResponseEntity.ok(proveedor);
+    }
+
+    @GetMapping("/{id}/reporte-pagos")
+    public ResponseEntity<ReportePagosResponse> reporteTotalPagado(
+        @PathVariable UUID id,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate desde,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate hasta
+    ) {
+        log.info("[reporteTotalPagado] IN - idProveedor: {} - desde: {} - hasta: {}", id, desde, hasta);
+        return ResponseEntity.ok(ordenPagoService.reporteTotalPagado(id, desde, hasta));
     }
 }

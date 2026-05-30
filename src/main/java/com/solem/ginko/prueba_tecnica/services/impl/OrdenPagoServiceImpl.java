@@ -1,5 +1,9 @@
 package com.solem.ginko.prueba_tecnica.services.impl;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -11,6 +15,7 @@ import com.solem.ginko.prueba_tecnica.dtos.ListOrdenesPagoRequest;
 import com.solem.ginko.prueba_tecnica.dtos.OrdenPagoRequest;
 import com.solem.ginko.prueba_tecnica.dtos.OrdenPagoResponse;
 import com.solem.ginko.prueba_tecnica.dtos.PageResponse;
+import com.solem.ginko.prueba_tecnica.dtos.ReportePagosResponse;
 import com.solem.ginko.prueba_tecnica.dtos.UpdateEstadoOrdenPagoRequest;
 import com.solem.ginko.prueba_tecnica.exceptions.BusinessException;
 import com.solem.ginko.prueba_tecnica.exceptions.NotFoundException;
@@ -61,6 +66,25 @@ public class OrdenPagoServiceImpl implements OrdenPagoService {
                 .orElseThrow(() -> new NotFoundException("Orden de pago no encontrada: " + id));
 
         return ordenPagoMapper.toResponse(orden);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ReportePagosResponse reporteTotalPagado(UUID idProveedor, LocalDate desde, LocalDate hasta) {
+        if (!proveedorRepository.existsById(idProveedor)) {
+            throw new NotFoundException("Proveedor no encontrado: " + idProveedor);
+        }
+
+        if (desde.isAfter(hasta)) {
+            throw new BusinessException("La fecha 'desde' no puede ser posterior a la fecha 'hasta'");
+        }
+
+        LocalDateTime desdeInicio = desde.atStartOfDay();
+        LocalDateTime hastaFin = hasta.atTime(LocalTime.MAX);
+
+        BigDecimal total = ordenPagoRepository.sumTotalPagadoByProveedorEnRango(idProveedor, desdeInicio, hastaFin);
+
+        return new ReportePagosResponse(idProveedor.toString(), desde, hasta, total);
     }
 
     @Override

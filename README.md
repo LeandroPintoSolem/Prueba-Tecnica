@@ -76,3 +76,4 @@ Se agregó `@Version` a la entidad. Si dos requests intentan modificar simultán
 ## Pendientes
 
 - **Idempotencia en creación de órdenes vía `Idempotency-Key`** (Bloque 4): no se implementó por tiempo. Una solución robusta requiere persistir las keys con sus respuestas, manejar TTL para evitar acumulación, y resolver carreras entre el chequeo de la key y el guardado del resultado. Una implementación apurada sería peor que no incluirla, por lo que se priorizó dejar fuera esta funcionalidad antes que hacerla a medias.
+- **Endpoint de órdenes próximas a vencer** (Bloque 4): no se implementó por tiempo. Habría requerido definir y documentar una regla de negocio propia (el modelo no tiene `fechaVencimiento`), por ejemplo "órdenes en estado `BORRADOR` o `APROBADA` con `fechaCreacion` más antigua que N días". Se priorizó cerrar concurrencia y reporte agregado, que aportaron más valor por menos tiempo.

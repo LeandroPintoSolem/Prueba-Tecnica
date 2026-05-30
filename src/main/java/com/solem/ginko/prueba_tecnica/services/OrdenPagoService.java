@@ -1,5 +1,6 @@
 package com.solem.ginko.prueba_tecnica.services;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 import org.springframework.data.domain.Pageable;
@@ -8,6 +9,7 @@ import com.solem.ginko.prueba_tecnica.dtos.ListOrdenesPagoRequest;
 import com.solem.ginko.prueba_tecnica.dtos.OrdenPagoRequest;
 import com.solem.ginko.prueba_tecnica.dtos.OrdenPagoResponse;
 import com.solem.ginko.prueba_tecnica.dtos.PageResponse;
+import com.solem.ginko.prueba_tecnica.dtos.ReportePagosResponse;
 import com.solem.ginko.prueba_tecnica.dtos.UpdateEstadoOrdenPagoRequest;
 
 public interface OrdenPagoService {
@@ -15,4 +17,5 @@ public interface OrdenPagoService {
     PageResponse<OrdenPagoResponse> listOrdenesPago(ListOrdenesPagoRequest request, Pageable pageable);
     OrdenPagoResponse getOrdenPago(UUID id);
     OrdenPagoResponse updateEstadoOrdenPago(UUID id, UpdateEstadoOrdenPagoRequest request);
+    ReportePagosResponse reporteTotalPagado(UUID idProveedor, LocalDate desde, LocalDate hasta);
 }
