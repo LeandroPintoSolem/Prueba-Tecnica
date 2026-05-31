@@ -35,7 +35,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -58,19 +57,17 @@ public class ProveedorController {
         summary = "Obtener proveedor por id",
         description = "Retorna los datos completos de un proveedor identificado por su UUID."
     )
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Proveedor encontrado"),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Proveedor no encontrado",
-            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-        ),
-        @ApiResponse(
-            responseCode = "400",
-            description = "El id no tiene formato UUID válido",
-            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-        )
-    })
+    @ApiResponse(responseCode = "200", description = "Proveedor encontrado")
+    @ApiResponse(
+        responseCode = "404",
+        description = "Proveedor no encontrado",
+        content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+    )
+    @ApiResponse(
+        responseCode = "400",
+        description = "El id no tiene formato UUID válido",
+        content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+    )
     public ResponseEntity<ProveedorResponse> getProveedor(
         @Parameter(description = "UUID del proveedor", example = "550e8400-e29b-41d4-a716-446655440000")
         @PathVariable UUID id
@@ -106,19 +103,17 @@ public class ProveedorController {
         summary = "Crear un nuevo proveedor",
         description = "Crea un proveedor nuevo. El idTributario debe ser único. Devuelve 201 con el recurso creado y un header Location apuntando al nuevo recurso."
     )
-    @ApiResponses({
-        @ApiResponse(responseCode = "201", description = "Proveedor creado exitosamente"),
-        @ApiResponse(
-            responseCode = "400",
-            description = "Datos inválidos en el request",
-            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-        ),
-        @ApiResponse(
-            responseCode = "409",
-            description = "Ya existe un proveedor con ese idTributario",
-            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-        )
-    })
+    @ApiResponse(responseCode = "201", description = "Proveedor creado exitosamente")
+    @ApiResponse(
+        responseCode = "400",
+        description = "Datos inválidos en el request",
+        content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+    )
+    @ApiResponse(
+        responseCode = "409",
+        description = "Ya existe un proveedor con ese idTributario",
+        content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+    )
     public ResponseEntity<ProveedorResponse> createProveedor(@Valid @RequestBody ProveedorRequest request) {
         log.info("[createProveedor] IN");
         ProveedorResponse created = proveedorService.createProveedor(request);
@@ -136,19 +131,17 @@ public class ProveedorController {
         summary = "Actualizar datos de un proveedor",
         description = "Actualiza la razón social y el email de un proveedor existente. El idTributario no se puede modificar por este endpoint (es inmutable). Para cambiar el estado, usar PATCH /{id}/estado."
     )
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Proveedor actualizado"),
-        @ApiResponse(
-            responseCode = "400",
-            description = "Datos inválidos en el request",
-            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-        ),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Proveedor no encontrado",
-            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-        )
-    })
+    @ApiResponse(responseCode = "200", description = "Proveedor actualizado")
+    @ApiResponse(
+        responseCode = "400",
+        description = "Datos inválidos en el request",
+        content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "Proveedor no encontrado",
+        content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+    )
     public ResponseEntity<ProveedorResponse> updateProveedor(
         @Parameter(description = "UUID del proveedor a actualizar", example = "550e8400-e29b-41d4-a716-446655440000")
         @PathVariable UUID id,
@@ -165,19 +158,17 @@ public class ProveedorController {
         summary = "Cambiar estado de un proveedor",
         description = "Cambia el estado de un proveedor (ACTIVO o INACTIVO). Endpoint separado del PUT para mantener la semántica REST de modificación parcial de un sub-recurso."
     )
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Estado actualizado"),
-        @ApiResponse(
-            responseCode = "400",
-            description = "Estado inválido en el request",
-            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-        ),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Proveedor no encontrado",
-            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-        )
-    })
+    @ApiResponse(responseCode = "200", description = "Estado actualizado")
+    @ApiResponse(
+        responseCode = "400",
+        description = "Estado inválido en el request",
+        content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "Proveedor no encontrado",
+        content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+    )
     public ResponseEntity<ProveedorResponse> updateEstadoProveedor(
         @Parameter(description = "UUID del proveedor", example = "550e8400-e29b-41d4-a716-446655440000")
         @PathVariable UUID id,
@@ -194,24 +185,22 @@ public class ProveedorController {
         summary = "Reporte de total pagado a un proveedor en un rango de fechas",
         description = "Retorna la suma de los montos de todas las órdenes en estado PAGADA del proveedor, cuya fechaCreacion caiga dentro del rango [desde, hasta] (inclusivo en ambos extremos). Si no hay órdenes que matcheen, retorna 0."
     )
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Reporte calculado correctamente"),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Proveedor no encontrado",
-            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-        ),
-        @ApiResponse(
-            responseCode = "422",
-            description = "La fecha 'desde' es posterior a la fecha 'hasta'",
-            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-        ),
-        @ApiResponse(
-            responseCode = "400",
-            description = "Formato de fecha inválido (debe ser ISO 8601: yyyy-MM-dd)",
-            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-        )
-    })
+    @ApiResponse(responseCode = "200", description = "Reporte calculado correctamente")
+    @ApiResponse(
+        responseCode = "404",
+        description = "Proveedor no encontrado",
+        content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+    )
+    @ApiResponse(
+        responseCode = "422",
+        description = "La fecha 'desde' es posterior a la fecha 'hasta'",
+        content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+    )
+    @ApiResponse(
+        responseCode = "400",
+        description = "Formato de fecha inválido (debe ser ISO 8601: yyyy-MM-dd)",
+        content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+    )
     public ResponseEntity<ReportePagosResponse> reporteTotalPagado(
         @Parameter(description = "UUID del proveedor", example = "550e8400-e29b-41d4-a716-446655440000")
         @PathVariable UUID id,

@@ -18,7 +18,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -54,24 +53,22 @@ public class OrdenPagoController {
         summary = "Crear una nueva orden de pago",
         description = "Crea una orden de pago para un proveedor existente y ACTIVO. El estado inicial siempre es BORRADOR (no se acepta del cliente). Devuelve 201 con el recurso creado y header Location."
     )
-    @ApiResponses({
-        @ApiResponse(responseCode = "201", description = "Orden de pago creada exitosamente"),
-        @ApiResponse(
-            responseCode = "400",
-            description = "Datos inválidos en el request (monto, concepto, idProveedor mal formado)",
-            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-        ),
-        @ApiResponse(
-            responseCode = "404",
-            description = "El proveedor referenciado no existe",
-            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-        ),
-        @ApiResponse(
-            responseCode = "422",
-            description = "El proveedor existe pero no está en estado ACTIVO",
-            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-        )
-    })
+    @ApiResponse(responseCode = "201", description = "Orden de pago creada exitosamente")
+    @ApiResponse(
+        responseCode = "400",
+        description = "Datos inválidos en el request (monto, concepto, idProveedor mal formado)",
+        content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "El proveedor referenciado no existe",
+        content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+    )
+    @ApiResponse(
+        responseCode = "422",
+        description = "El proveedor existe pero no está en estado ACTIVO",
+        content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+    )
     public ResponseEntity<OrdenPagoResponse> createOrdenPago(@Valid @RequestBody OrdenPagoRequest request) {
         log.info(
             "[createOrdenPago] IN - idProveedor: {} - monto: {} - concepto: {}",
@@ -95,19 +92,17 @@ public class OrdenPagoController {
         summary = "Obtener orden de pago por id",
         description = "Retorna los datos completos de una orden de pago identificada por su UUID."
     )
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Orden encontrada"),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Orden de pago no encontrada",
-            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-        ),
-        @ApiResponse(
-            responseCode = "400",
-            description = "El id no tiene formato UUID válido",
-            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-        )
-    })
+    @ApiResponse(responseCode = "200", description = "Orden encontrada")
+    @ApiResponse(
+        responseCode = "404",
+        description = "Orden de pago no encontrada",
+        content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+    )
+    @ApiResponse(
+        responseCode = "400",
+        description = "El id no tiene formato UUID válido",
+        content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+    )
     public ResponseEntity<OrdenPagoResponse> getOrdenPago(
         @Parameter(description = "UUID de la orden de pago", example = "9b2d4e1a-3c5f-4a8e-9d6b-7c8f2a1b3d4e")
         @PathVariable UUID id
@@ -156,29 +151,27 @@ public class OrdenPagoController {
             Maneja concurrencia con optimistic locking: si dos requests intentan modificar la misma orden simultáneamente, uno gana y el otro recibe 409.
             """
     )
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Estado actualizado correctamente"),
-        @ApiResponse(
-            responseCode = "400",
-            description = "Estado inválido en el request",
-            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-        ),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Orden de pago no encontrada",
-            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-        ),
-        @ApiResponse(
-            responseCode = "409",
-            description = "Conflicto de concurrencia: la orden fue modificada por otro proceso",
-            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-        ),
-        @ApiResponse(
-            responseCode = "422",
-            description = "Transición de estado inválida según las reglas de negocio",
-            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-        )
-    })
+    @ApiResponse(responseCode = "200", description = "Estado actualizado correctamente")
+    @ApiResponse(
+        responseCode = "400",
+        description = "Estado inválido en el request",
+        content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "Orden de pago no encontrada",
+        content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+    )
+    @ApiResponse(
+        responseCode = "409",
+        description = "Conflicto de concurrencia: la orden fue modificada por otro proceso",
+        content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+    )
+    @ApiResponse(
+        responseCode = "422",
+        description = "Transición de estado inválida según las reglas de negocio",
+        content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+    )
     public ResponseEntity<OrdenPagoResponse> updateEstadoOrdenPago(
         @Parameter(description = "UUID de la orden de pago", example = "9b2d4e1a-3c5f-4a8e-9d6b-7c8f2a1b3d4e")
         @PathVariable UUID id,
